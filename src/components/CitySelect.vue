@@ -1,20 +1,16 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { inject, onMounted, ref, watch } from 'vue'
 import Button from './Button.vue'
 import Input from './Input.vue'
 
-const emit = defineEmits(['select-city'])
-
-const city = ref('Bishkek')
 const isEdited = ref(false)
 
-onMounted(() => {
-  emit('select-city', city.value)
-})
+const city = inject('city')
+const inputValue = ref(city.value)
 
 function select() {
   isEdited.value = false
-  emit('select-city', city.value)
+  city.value = inputValue.value
 }
 
 function edit() {
@@ -27,11 +23,11 @@ watch(city, () => {})
 <template>
   <div class="city">
     <div v-if="isEdited" class="city-input">
-      <Input placeholder="Введите город" v-model="city" @keyup.enter="select()" v-focus />
+      <Input placeholder="Введите город" v-model="inputValue" @keyup.enter="select()" v-focus />
       <Button @click="select()">Сохранить</Button>
     </div>
     <Button v-else @click="edit()">
-      <img src="/public/location.svg" alt="Иконка локации" />
+      <img src="/location.svg" alt="Иконка локации" />
       Изменить город
     </Button>
   </div>
