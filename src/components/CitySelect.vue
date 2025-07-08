@@ -1,12 +1,13 @@
 <script setup>
-import { inject, onMounted, ref, watch } from 'vue'
-import Button from './Button.vue'
+import { inject, ref } from 'vue'
 import Input from './Input.vue'
+import Button from './Button.vue'
+import { cityProvide } from '@/constants'
 
-const isEdited = ref(false)
-
-const city = inject('city')
+const city = inject(cityProvide)
 const inputValue = ref(city.value)
+
+let isEdited = ref(false)
 
 function select() {
   isEdited.value = false
@@ -16,29 +17,28 @@ function select() {
 function edit() {
   isEdited.value = true
 }
-
-watch(city, () => {})
 </script>
 
 <template>
-  <div class="city">
+  <div class="city-select">
     <div v-if="isEdited" class="city-input">
-      <Input placeholder="Введите город" v-model="inputValue" @keyup.enter="select()" v-focus />
+      <Input v-model="inputValue" v-focus placeholder="Введите город" @keyup.enter="select()" />
       <Button @click="select()">Сохранить</Button>
     </div>
     <Button v-else @click="edit()">
-      <img src="/location.svg" alt="Иконка локации" />
+      <IconLocation />
+      <img src="/location.svg" alt="location icon" />
       Изменить город
     </Button>
   </div>
 </template>
 
 <style scoped>
-.city {
-  width: 420px;
-}
 .city-input {
   display: flex;
   gap: 12px;
+}
+.city-select {
+  width: 420px;
 }
 </style>

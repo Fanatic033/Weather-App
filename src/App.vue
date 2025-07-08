@@ -1,15 +1,15 @@
 <script setup>
 import { onMounted, provide, ref, watch } from 'vue'
 import PanelRight from './components/PanelRight.vue'
+import PaneLeft from './components/PaneLeft.vue'
+import { API_ENDPOINT, cityProvide } from './constants'
 
-const API_ENDPOINT = 'https://api.weatherapi.com/v1'
+let data = ref()
+let error = ref()
+let activeIndex = ref(0)
+let city = ref('Бишкек')
 
-const data = ref()
-const error = ref()
-const activeIndex = ref(0)
-const city = ref('Bishkek')
-
-provide('city', city)
+provide(cityProvide, city)
 
 watch(city, () => {
   getCity(city.value)
@@ -26,27 +26,28 @@ async function getCity(city) {
     key: 'bfb12779b19e4fff8b485359250307',
     days: 3,
   })
-  const response = await fetch(`${API_ENDPOINT}/forecast.json?${params}`)
-  const json = await response.json()
-  if (response.status !== 200) {
-    error.value = json
+  const res = await fetch(`${API_ENDPOINT}/forecast.json?${params.toString()}`)
+  if (res.status != 200) {
+    error.value = await res.json()
     data.value = null
-  } else {
-    data.value = json
-    error.value = null
+    return
   }
+  error.value = null
+  data.value = await res.json()
 }
 </script>
 
 <template>
   <main class="main">
-    <div class="left"></div>
+    <div class="left">
+      <PaneLeft v-if="data" :day-data="data.forecast.forecastday[activeIndex]" />
+    </div>
     <div class="right">
       <PanelRight
-        :data="data"
-        :error="error"
+        :data
+        :error
         :active-index="activeIndex"
-        @select-index="(index) => (activeIndex = index)"
+        @select-index="(i) => (activeIndex = i)"
       />
     </div>
   </main>
@@ -59,16 +60,15 @@ async function getCity(city) {
   justify-content: center;
 }
 .right {
-  background: var(--bg-main);
-  padding: 50px 60px;
-  border-radius: 25px;
+  background: var(--color-bg-main);
+  padding: 60px 50px;
+  border-radius: 0 25px 25px 0;
 }
-
 .left {
   width: 500px;
-  height: 660px;
+  height: 680px;
   border-radius: 30px;
-  background: url('/bg.png');
+  background-image: url('/public/bg.png');
   background-repeat: no-repeat;
   background-size: cover;
 }
