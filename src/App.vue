@@ -60,7 +60,7 @@ async function getCity(city) {
   justify-content: center;
 }
 .right {
-  background: var(--color-bg-main);
+  background: var(--bg-main);
   padding: 60px 50px;
   border-radius: 0 25px 25px 0;
 }

@@ -43,7 +43,7 @@ const weatherCode = computed(() => {
       </div>
     </div>
     <div>
-      <div class="wetherIcon">
+      <div class="weatherIcon">
         <IconSun v-if="weatherCode <= 1003" size="95" />
         <IconCloud v-if="weatherCode >= 1006 && weatherCode < 1063" size="95" />
         <IconRain v-if="weatherCode >= 1063" size="95" />
@@ -77,7 +77,7 @@ const weatherCode = computed(() => {
   font-weight: 500;
   margin-bottom: 10px;
 }
-.wetherIcon {
+.weatherIcon {
   margin: 25px;
 }
 .city {
